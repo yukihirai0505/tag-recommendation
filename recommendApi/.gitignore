@@ -1,3 +1,4 @@
+src/main/resources/*csv
 database_metastore_plsql_test/
 hplsql_locals.sql
 *.iml
