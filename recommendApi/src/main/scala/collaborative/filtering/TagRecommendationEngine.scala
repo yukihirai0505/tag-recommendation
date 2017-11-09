@@ -2,7 +2,7 @@ package collaborative.filtering
 
 import java.util.Scanner
 
-import org.apache.spark.mllib.recommendation.{ALS, MatrixFactorizationModel, Rating}
+import org.apache.spark.mllib.recommendation.{ALS, Rating}
 import org.apache.spark.rdd.RDD
 import org.apache.spark.{SparkConf, SparkContext}
 
@@ -12,7 +12,6 @@ class TagRecommendationEngine {
   val sc = new SparkContext(conf)
   val directory = "src/main/resources"
   val scanner = new Scanner(System.in)
-  val numPartitions = 20
   val topTenTags = getRatingFromUser
 
   def getRatingRDD: RDD[String] = {
@@ -25,11 +24,11 @@ class TagRecommendationEngine {
     sc.textFile(directory + "/tags.csv")
   }
 
-  def getRDDOfRating: RDD[(Int, Rating)] = {
+  def getRDDOfRating: RDD[Rating] = {
 
     getRatingRDD.map { line =>
       val fields = line.split(",")
-      (fields(2).toInt % 2, Rating(fields(0).toInt, fields(1).toInt, fields(2).toInt))
+      Rating(fields(0).toInt, fields(1).toInt, fields(2).toInt)
     }
   }
 
@@ -70,9 +69,9 @@ object TagRecommendationEngine extends App {
 
   val model = ALS.train(training.union(myRatingsRDD), rank = 8, 10, 0.01)
 
-  val TagsIHaveSeen = myRatingsRDD.map(x => x.product).collect().toList
+  val tagsIHaveUsed = myRatingsRDD.map(x => x.product).collect().toList
 
-  val tagsIHaveNotSeen = tags.filter { case (tagId, name) => !TagsIHaveSeen.contains(tagId) }.map(_._1)
+  val tagsIHaveNotUsed = tags.filter { case (tagId, name) => !tagsIHaveUsed.contains(tagId) }.map(_._1)
 
   val predictedRates =
     model.predict(test.map { case Rating(user, item, rating) => (user, item) }).map { case Rating(user, product, rate) =>
@@ -87,7 +86,7 @@ object TagRecommendationEngine extends App {
 
   println("Mean Squared Error = " + MSE)
 
-  val recommendedTagsId = model.predict(tagsIHaveNotSeen.map { product =>
+  val recommendedTagsId = model.predict(tagsIHaveNotUsed.map { product =>
     (0, product)
   }).map { case Rating(user, tag, rating) => (tag, rating) }
     .sortBy(x => x._2, ascending = false).take(20).map(x => x._1)
