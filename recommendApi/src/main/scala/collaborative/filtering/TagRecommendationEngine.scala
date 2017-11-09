@@ -43,12 +43,10 @@ class TagRecommendationEngine {
   }
 
   def getRatingFromUser: RDD[Rating] = {
-    val tagList = (1 to 10).map { _ =>
-      println("Please Enter hash tag")
-      val hashTag = scanner.next()
-      Rating(0, getTagsMap.find(v => v._2.equals(hashTag)).fold(0)(x => x._1), 100)
-    }
-    sc.parallelize(tagList)
+
+    println("Please Enter hash tag")
+    val hashTag = scanner.next()
+    sc.parallelize(Seq(Rating(0, getTagsMap.find(v => v._2.equals(hashTag)).fold(0)(x => x._1), 100)))
   }
 
 }
@@ -68,14 +66,13 @@ object TagRecommendationEngine extends App {
   }.map { case (tagId, tagName) => (tagId.toInt, tagName) }
 
   val myRatingsRDD = tagRecommendationHelper.topTenTags
-  val training = ratings.filter { case Rating(userId, tagId, rating) => (userId * tagId) % 10 <= 3 }.persist
-  val test = ratings.filter { case Rating(userId, tagId, rating) => (userId * tagId) % 10 > 3 }.persist
+  val Array(training, test) = ratings.randomSplit(Array(0.8, 0.2))
 
-  val model = ALS.train(training.union(myRatingsRDD), rank = 10, 10, 0.01)
+  val model = ALS.train(training.union(myRatingsRDD), rank = 8, 10, 0.01)
 
   val TagsIHaveSeen = myRatingsRDD.map(x => x.product).collect().toList
 
-  val TagsIHaveNotSeen = tags.filter { case (tagId, name) => !TagsIHaveSeen.contains(tagId) }.map(_._1)
+  val tagsIHaveNotSeen = tags.filter { case (tagId, name) => !TagsIHaveSeen.contains(tagId) }.map(_._1)
 
   val predictedRates =
     model.predict(test.map { case Rating(user, item, rating) => (user, item) }).map { case Rating(user, product, rate) =>
@@ -90,7 +87,7 @@ object TagRecommendationEngine extends App {
 
   println("Mean Squared Error = " + MSE)
 
-  val recommendedTagsId = model.predict(TagsIHaveNotSeen.map { product =>
+  val recommendedTagsId = model.predict(tagsIHaveNotSeen.map { product =>
     (0, product)
   }).map { case Rating(user, tag, rating) => (tag, rating) }
     .sortBy(x => x._2, ascending = false).take(20).map(x => x._1)
