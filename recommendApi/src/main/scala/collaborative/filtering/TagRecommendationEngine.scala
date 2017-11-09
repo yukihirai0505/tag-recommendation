@@ -6,6 +6,7 @@ import org.apache.spark.mllib.recommendation.{ALS, Rating}
 import org.apache.spark.rdd.RDD
 import org.apache.spark.{SparkConf, SparkContext}
 
+
 class TagRecommendationEngine {
 
   val conf = new SparkConf().setAppName("Recommendation App").setMaster("local")
@@ -16,7 +17,7 @@ class TagRecommendationEngine {
 
   def getRatingRDD: RDD[String] = {
 
-    sc.textFile(directory + "/ratings.csv")
+    sc.textFile(directory + "/posts.csv")
   }
 
   def getTagRDD: RDD[String] = {
@@ -28,7 +29,8 @@ class TagRecommendationEngine {
 
     getRatingRDD.map { line =>
       val fields = line.split(",")
-      Rating(fields(0).toInt, fields(1).toInt, fields(2).toInt)
+
+      Rating(fields(0).toInt, fields(1).toInt, fields(2).toDouble)
     }
   }
 
@@ -41,11 +43,26 @@ class TagRecommendationEngine {
     }.collect().toMap
   }
 
-  def getRatingFromUser: RDD[Rating] = {
+  /*
+  def getTopTenTags: List[(Int, String)] = {
 
-    println("Please Enter hash tag")
+    val top50TagIDs = getRDDOfRating.map { rating => rating.product }
+      .countByValue()
+      .toList
+      .sortBy(-_._2)
+      .take(50)
+      .map { ratingData => ratingData._1 }
+
+    top50TagIDs.filter(id => getTagsMap.contains(id))
+      .map { tagId => (tagId, getTagsMap.getOrElse(tagId, "No Tag Found")) }
+      .sorted
+      .take(10)
+  }*/
+
+  def getRatingFromUser: RDD[Rating] = {
+    println(s"Please Enter HashTag")
     val hashTag = scanner.next()
-    sc.parallelize(Seq(Rating(0, getTagsMap.find(v => v._2.equals(hashTag)).fold(0)(x => x._1), 100)))
+    sc.parallelize(Seq(Rating(0, getTagsMap.find(v => v._2.equals(hashTag)).fold(0)(x => x._1), 3.0)))
   }
 
 }
@@ -55,10 +72,7 @@ object TagRecommendationEngine extends App {
   val tagRecommendationHelper = new TagRecommendationEngine
   val sc = tagRecommendationHelper.sc
   // Load and parse the data
-  val ratings = tagRecommendationHelper.getRatingRDD.map(_.split(",") match {
-    case Array(user, item, rate) =>
-      Rating(user.toInt, item.toInt, rate.toInt)
-  })
+  val ratings = tagRecommendationHelper.getRDDOfRating
   val tags = tagRecommendationHelper.getTagRDD.map { str =>
     val data = str.split(",")
     (data(0), data(1))
@@ -67,7 +81,7 @@ object TagRecommendationEngine extends App {
   val myRatingsRDD = tagRecommendationHelper.topTenTags
   val Array(training, test) = ratings.randomSplit(Array(0.8, 0.2))
 
-  val model = ALS.train(training.union(myRatingsRDD), rank = 8, 10, 0.01)
+  val model = ALS.train(training.union(myRatingsRDD), 8, 10, 0.01)
 
   val tagsIHaveUsed = myRatingsRDD.map(x => x.product).collect().toList
 
@@ -93,8 +107,8 @@ object TagRecommendationEngine extends App {
 
   val recommendTag = tagRecommendationHelper.getTagRDD.map { str =>
     val data = str.split(",")
-    (data(0).toInt, data(1), data(2).toInt)
-  }.filter { case (id, _, _) => recommendedTagsId.contains(id) }
+    (data(0).toInt, data(1))
+  }.filter { case (id, tag) => recommendedTagsId.contains(id) }
 
   recommendTag.collect().toList.foreach(println)
   tagRecommendationHelper.sc.stop()
