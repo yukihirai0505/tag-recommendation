@@ -1,36 +1,56 @@
 import React, {Component} from 'react';
-import {getTagInfo} from '../../utils/request-api'
+import {getRecommendTags, getTagInfo} from '../../utils/request-api'
 import {TextBox} from '../Components/TextBox'
 
 class Home extends Component {
   constructor() {
     super();
-    this.state = {tags: [], form: {}}
+    this.state = {
+      tags: [],
+      form: {}
+    }
   }
 
   componentWillMount() {
-
+  
   }
-
+  
   onChange = (e) => {
     this.state.form[e.target.name] = e.target.value;
     this.setState({form: this.state.form});
   };
-
+  
   handleSubmit = (e) => {
     e.preventDefault();
     const {form} = this.state;
     const tagName = form.name
-    getTagInfo(tagName).then(res => {
-      console.info(res);
-      this.setState({tags: res})
+    getRecommendTags(tagName).then(tags => {
+      tags.map((tag) => {
+        getTagInfo(tag).then(info => {
+          const {tags} = this.state;
+          const count = info && info.data &&
+            info.data.hashtag && info.data.hashtag.edgeHashtagToMedia &&
+            info.data.hashtag.edgeHashtagToMedia.count
+          const newTags = tags.concat(
+            {
+              name: tag,
+              count: count ? count : 0
+            }
+          );
+          this.setState({
+            tags: newTags.sort((a, b) => {
+              let aCount = a.count
+              let bCount = b.count
+              return aCount > bCount ? -1 : aCount < bCount ? 1 : 0
+            }).filter((t) => t.count >= 50)
+          });
+        })
+      })
     });
-
   };
 
   render() {
-    const {tags, form} = this.state;
-
+    const {form, tags} = this.state;
     return (
       <div className="animated fadeIn">
         <div className="row">
@@ -67,6 +87,7 @@ class Home extends Component {
                   <thead>
                   <tr>
                     <th className="col-sm-3 col-xs-4">タグ</th>
+                    <th>投稿数</th>
                   </tr>
                   </thead>
                   <tbody>
@@ -86,9 +107,8 @@ function renderTags(tags = []) {
   return tags.map((recommendInfo, key) => {
     return (
       <tr key={key}>
-        <td>
-          {recommendInfo}
-        </td>
+        <td>{recommendInfo.name}</td>
+        <td>{recommendInfo.count}</td>
       </tr>)
   })
 }
