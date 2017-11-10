@@ -41,57 +41,6 @@
   }
 
   //
-  // Sidebar
-  //
-  .sidebar-hidden {
-
-    .sidebar {
-      margin-right: - $sidebar-width;
-    }
-  }
-
-  .sidebar-fixed {
-
-    .main, .app-footer {
-      margin-right: $sidebar-width;
-    }
-
-    &.sidebar-hidden {
-
-      .main, .app-footer {
-        margin-right: 0;
-      }
-    }
-  }
-
-  .sidebar-minimized {
-    .sidebar {
-      flex: 0 0 $sidebar-minimized-width;
-    }
-
-    &.sidebar-hidden {
-
-      .sidebar {
-        margin-left: - $sidebar-minimized-width;
-      }
-    }
-
-    &.sidebar-fixed {
-
-      .main, .app-footer {
-        margin-left: $sidebar-minimized-width;
-      }
-
-      &.sidebar-hidden {
-
-        .main, .app-footer {
-          margin-left: 0;
-        }
-      }
-    }
-  }
-
-  //
   // Aside Menu
   //
   .aside-menu-hidden {
