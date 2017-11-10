@@ -1,3 +1,4 @@
+@charset "UTF-8";
 /**
  * CoreUI - Open Source Bootstrap Admin Template
  * @version v1.0.0-alpha.6
@@ -8585,51 +8586,6 @@ app-root {
 .header-fixed .app-body {
   margin-top: 55px; }
 
-.sidebar-hidden .sidebar {
-  margin-left: -200px; }
-
-.sidebar-fixed .sidebar {
-  position: fixed;
-  width: 200px;
-  height: 100%; }
-  .sidebar-fixed .sidebar .sidebar-nav {
-    height: calc(100vh - 55px); }
-
-.sidebar-fixed .main, .sidebar-fixed .app-footer {
-  margin-left: 200px; }
-
-.sidebar-fixed.sidebar-hidden .main, .sidebar-fixed.sidebar-hidden .app-footer {
-  margin-left: 0; }
-
-.sidebar-off-canvas .sidebar {
-  position: fixed;
-  z-index: 1019;
-  height: 100%; }
-  .sidebar-off-canvas .sidebar .sidebar-nav {
-    height: calc(100vh - 55px); }
-
-@media (min-width: 992px) {
-  .sidebar-compact .sidebar {
-    flex: 0 0 150px; }
-  .sidebar-compact.sidebar-hidden .sidebar {
-    margin-left: -150px; }
-  .sidebar-compact.sidebar-fixed .main, .sidebar-compact.sidebar-fixed .app-footer {
-    margin-left: 150px; }
-  .sidebar-compact.sidebar-fixed .sidebar {
-    width: 150px; }
-  .sidebar-compact.sidebar-fixed.sidebar-hidden .main, .sidebar-compact.sidebar-fixed.sidebar-hidden .app-footer {
-    margin-left: 0; }
-  .sidebar-minimized .sidebar {
-    flex: 0 0 50px; }
-  .sidebar-minimized.sidebar-hidden .sidebar {
-    margin-left: -50px; }
-  .sidebar-minimized.sidebar-fixed .main, .sidebar-minimized.sidebar-fixed .app-footer {
-    margin-left: 50px; }
-  .sidebar-minimized.sidebar-fixed .sidebar {
-    width: 50px; }
-  .sidebar-minimized.sidebar-fixed.sidebar-hidden .main, .sidebar-minimized.sidebar-fixed.sidebar-hidden .app-footer {
-    margin-left: 0; } }
-
 .aside-menu-hidden .aside-menu {
   margin-right: -250px; }
 
@@ -8822,20 +8778,6 @@ hr.transparent {
     *[dir="rtl"] .dropdown-item .badge {
       right: auto;
       left: 10px; }
-  *[dir="rtl"] .sidebar-hidden .sidebar {
-    margin-right: -200px; }
-  *[dir="rtl"] .sidebar-fixed .main, *[dir="rtl"] .sidebar-fixed .app-footer {
-    margin-right: 200px; }
-  *[dir="rtl"] .sidebar-fixed.sidebar-hidden .main, *[dir="rtl"] .sidebar-fixed.sidebar-hidden .app-footer {
-    margin-right: 0; }
-  *[dir="rtl"] .sidebar-minimized .sidebar {
-    flex: 0 0 50px; }
-  *[dir="rtl"] .sidebar-minimized.sidebar-hidden .sidebar {
-    margin-left: -50px; }
-  *[dir="rtl"] .sidebar-minimized.sidebar-fixed .main, *[dir="rtl"] .sidebar-minimized.sidebar-fixed .app-footer {
-    margin-left: 50px; }
-  *[dir="rtl"] .sidebar-minimized.sidebar-fixed.sidebar-hidden .main, *[dir="rtl"] .sidebar-minimized.sidebar-fixed.sidebar-hidden .app-footer {
-    margin-left: 0; }
   *[dir="rtl"] .aside-menu-hidden .aside-menu {
     margin-left: -250px; }
   *[dir="rtl"] .aside-menu-fixed .aside-menu {

@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {getTagInfo} from '../../utils/request-api'
 import {TextBox} from '../Components/TextBox'
 
-class Dashboard extends Component {
+class Home extends Component {
   constructor() {
     super();
     this.state = {tags: [], form: {}}
@@ -93,4 +93,4 @@ function renderTags(tags = []) {
   })
 }
 
-export default Dashboard;
+export default Home;
