@@ -10,9 +10,8 @@ class Home extends Component {
       form: {}
     }
   }
-
-  componentWillMount() {
   
+  componentWillMount() {
   }
   
   onChange = (e) => {
@@ -23,14 +22,14 @@ class Home extends Component {
   handleSubmit = (e) => {
     e.preventDefault();
     const {form} = this.state;
-    const tagName = form.name
+    const tagName = form.name;
     getRecommendTags(tagName).then(tags => {
       tags.map((tag) => {
         getTagInfo(tag).then(info => {
           const {tags} = this.state;
           const count = info && info.data &&
             info.data.hashtag && info.data.hashtag.edgeHashtagToMedia &&
-            info.data.hashtag.edgeHashtagToMedia.count
+            info.data.hashtag.edgeHashtagToMedia.count;
           const newTags = tags.concat(
             {
               name: tag,
@@ -39,8 +38,8 @@ class Home extends Component {
           );
           this.setState({
             tags: newTags.sort((a, b) => {
-              let aCount = a.count
-              let bCount = b.count
+              let aCount = a.count;
+              let bCount = b.count;
               return aCount > bCount ? -1 : aCount < bCount ? 1 : 0
             }).filter((t) => t.count >= 50)
           });
