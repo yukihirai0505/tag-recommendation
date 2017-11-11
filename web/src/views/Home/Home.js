@@ -24,6 +24,7 @@ class Home extends Component {
     const {form} = this.state;
     const tagName = form.name;
     getRecommendTags(tagName).then(tags => {
+      this.setState({tags: []});
       tags.map((tag) => {
         getTagInfo(tag).then(info => {
           const {tags} = this.state;
