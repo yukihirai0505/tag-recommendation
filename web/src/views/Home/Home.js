@@ -48,40 +48,35 @@ class Home extends Component {
       })
     });
   };
-
+  
   render() {
     const {form, tags} = this.state;
     return (
       <div className="animated fadeIn">
-        <div className="row">
-          <div className="col-md-12">
-            <div className="card ">
-              <div className="card-header">
-                タグ検索
-              </div>
-              <form
-                className="form-horizontal"
-                onSubmit={this.handleSubmit}
-              >
-                <div className="card-block">
-                  <TextBox name='name'
-                           labelName='タグ'
-                           placeholder="タグ名を入れてください"
-                           onChange={this.onChange}
-                  />
-                </div>
-                <div className="card-footer text-right">
-                  <button type="submit" className="btn btn-sm btn-primary "><i className="fa fa-dot-circle-o"/> 検索
-                  </button>
-                </div>
-              </form>
-            </div>
-          </div>
-          <div className="col-md-12">
-            <div className="card">
-              <div className="card-header">
-                <i className="fa fa-align-justify"/> おすすめタグ一覧一覧
-              </div>
+        <div className="col-md-12" style={{marginBottom: "10px"}}>
+          <form
+            className="form-horizontal"
+            onSubmit={this.handleSubmit}
+          >
+            <TextBox name='name'
+                     placeholder="タグ名を入れてください"
+                     onChange={this.onChange}
+            />
+            <button type="submit" className="btn btn-sm btn-primary "><i className="fa fa-dot-circle-o"/> 検索
+            </button>
+          </form>
+        </div>
+        <
+          div
+          className="col-md-12">
+          < div
+            className="card">
+            < div
+              className="card-header">
+              < i
+                className="fa fa-align-justify" / > おすすめタグ一覧一覧
+              <
+              /div>
               <div className="card-block">
                 <table className="table">
                   <thead>
@@ -95,22 +90,22 @@ class Home extends Component {
                   </tbody>
                 </table>
               </div>
+              <
+              /div>
             </div>
           </div>
-        </div>
-      </div>
-    )
-  }
-}
-
-function renderTags(tags = []) {
-  return tags.map((recommendInfo, key) => {
-    return (
-      <tr key={key}>
-        <td>{recommendInfo.name}</td>
-        <td>{recommendInfo.count}</td>
-      </tr>)
-  })
-}
-
-export default Home;
+          )
+          }
+          }
+          
+          function renderTags(tags = []) {
+          return tags.map((recommendInfo, key) => {
+          return (
+          <tr key={key}>
+          <td>{recommendInfo.name}</td>
+          <td>{recommendInfo.count}</td>
+          </tr>)
+        })
+        }
+          
+          export default Home;
