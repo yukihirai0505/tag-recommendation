@@ -66,46 +66,41 @@ class Home extends Component {
             </button>
           </form>
         </div>
-        <
-          div
+        <div
           className="col-md-12">
-          < div
+          <div
             className="card">
-            < div
-              className="card-header">
-              < i
-                className="fa fa-align-justify" / > おすすめタグ一覧一覧
-              <
-              /div>
-              <div className="card-block">
-                <table className="table">
-                  <thead>
-                  <tr>
-                    <th className="col-sm-3 col-xs-4">タグ</th>
-                    <th>投稿数</th>
-                  </tr>
-                  </thead>
-                  <tbody>
-                  {renderTags(tags)}
-                  </tbody>
-                </table>
-              </div>
-              <
-              /div>
+            <div className="card-header">
+              <i className="fa fa-align-justify"/> おすすめタグ一覧一覧
+            </div>
+            <div className="card-block">
+              <table className="table">
+                <thead>
+                <tr>
+                  <th className="col-sm-3 col-xs-4">タグ</th>
+                  <th>投稿数</th>
+                </tr>
+                </thead>
+                <tbody>
+                {renderTags(tags)}
+                </tbody>
+              </table>
             </div>
           </div>
-          )
-          }
-          }
-          
-          function renderTags(tags = []) {
-          return tags.map((recommendInfo, key) => {
-          return (
-          <tr key={key}>
-          <td>{recommendInfo.name}</td>
-          <td>{recommendInfo.count}</td>
-          </tr>)
-        })
-        }
-          
-          export default Home;
+        </div>
+      </div>
+    )
+  }
+}
+
+function renderTags(tags = []) {
+  return tags.map((recommendInfo, key) => {
+    return (
+      <tr key={key}>
+        <td>{recommendInfo.name}</td>
+        <td>{recommendInfo.count}</td>
+      </tr>)
+  })
+}
+
+export default Home;
