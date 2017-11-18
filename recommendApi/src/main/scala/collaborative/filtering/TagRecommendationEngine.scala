@@ -17,12 +17,12 @@ class TagRecommendationEngine {
 
   def getRatingRDD: RDD[String] = {
 
-    sc.textFile(directory + "/posts.csv")
+    sc.textFile(s"$directory/posts.csv")
   }
 
   def getTagRDD: RDD[String] = {
 
-    sc.textFile(directory + "/tags.csv")
+    sc.textFile(s"$directory/tags.csv")
   }
 
   def getRDDOfRating: RDD[Rating] = {
@@ -42,22 +42,6 @@ class TagRecommendationEngine {
       (fields(0).toInt, fields(1))
     }.collect().toMap
   }
-
-  /*
-  def getTopTenTags: List[(Int, String)] = {
-
-    val top50TagIDs = getRDDOfRating.map { rating => rating.product }
-      .countByValue()
-      .toList
-      .sortBy(-_._2)
-      .take(50)
-      .map { ratingData => ratingData._1 }
-
-    top50TagIDs.filter(id => getTagsMap.contains(id))
-      .map { tagId => (tagId, getTagsMap.getOrElse(tagId, "No Tag Found")) }
-      .sorted
-      .take(10)
-  }*/
 
   def getRatingFromUser: RDD[Rating] = {
     println(s"Please Enter HashTag")
